@@ -1,8 +1,10 @@
 {
-  "name": "placeholder-model-2",
+  "name": "aether-v9-pro",
+  "description": "Cinematic paranormal EMF tracker simulation — a fully client-side fictional hardware instrument built with React, TypeScript, and the Web Audio API.",
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "license": "MIT",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
