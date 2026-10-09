@@ -3,7 +3,7 @@
 | | |
 | --- | --- |
 | **Audience** | Maintainers, reviewers, contributors picking up work |
-| **Status** | Complete as of commit `102e524`, plus [TD-21](#td-21), which the `0.1.0` documentation release introduced. Every entry was reproduced or verified before being recorded. |
+| **Status** | Complete as of commit `102e524`, plus [TD-21](#td-21), which the `0.1.0` documentation release introduced, and [TD-22](#td-22), recorded during it. Every entry was reproduced or verified before being recorded. |
 | **Line numbers** | Accurate at that commit. When a cited line moves, update the citation in the same PR. |
 
 A register, not a shame list. Every entry has evidence, a severity, a remediation, and a
@@ -33,7 +33,7 @@ nothing here is hidden from the README.
 | **Medium** | Correctness or maintainability risk not yet visible to a user |
 | **Low** | Hygiene, consistency, or polish |
 
-**Summary: 21 entries — 1 Critical · 4 High · 10 Medium · 6 Low.**
+**Summary: 22 entries — 1 Critical · 4 High · 11 Medium · 6 Low.**
 
 | ID | Title | Severity | Category |
 | --- | --- | --- | --- |
@@ -52,6 +52,7 @@ nothing here is hidden from the README.
 | [TD-17](#td-17) | A 10 Hz clock in `App.tsx` re-renders the whole console | Medium | Performance |
 | [TD-19](#td-19) | Zero automated test coverage | Medium | Assurance |
 | [TD-21](#td-21) | Documentation prose is compiled into the production CSS | Medium | Build |
+| [TD-22](#td-22) | Four high-severity advisories in the tree; `dependencies` misleads `npm audit` | Medium | Supply chain |
 | [TD-06](#td-06) | Unused dependencies and orphan files | Low | Hygiene |
 | [TD-08](#td-08) | Dead code and silently swallowed failures | Low | Hygiene |
 | [TD-09](#td-09) | Documentation and comment drift | Low | Documentation |
@@ -569,6 +570,45 @@ coupling in place for the next text file someone adds.
 **Verification:** `npm run build` reports CSS back at ≈ 41.9 kB / 7.9 kB gzip; then add the word
 "container" to any guide, rebuild, and confirm the stylesheet is byte-identical. Scheduled as
 [Roadmap D21](roadmap.md#2-phase-0--publishable).
+
+---
+
+<a id="td-22"></a>
+### TD-22 — Four high-severity advisories in the dependency tree, and a `dependencies` block that misleads `npm audit`
+
+| | |
+| --- | --- |
+| **Severity** | Medium · **Category** Supply chain |
+| **Evidence** | `npm audit` → **4 high** (0 critical, 0 moderate, 0 low), all transitive: `brace-expansion` 1.1.16, `browserslist` 4.28.6, `js-yaml` 4.3.0, `source-map-js` 1.2.1. `npm audit --omit=dev` → **1 high**. **Zero** occurrences of any of the four names in `dist/assets/*.js` |
+| **Exposure** | Build machine — CI runner, developer laptop. Not the visitor: nothing here is imported by `src/` or bundled |
+
+Two distinct problems that surface in the same command:
+
+1. **The advisories are unfixed.** All four have published fixes and `npm audit fix` resolves them.
+   They are DoS-class (OOM, quadratic CPU, event-loop starvation) in tools that parse
+   attacker-influenceable input — an ESLint config, a Babel targets query, a YAML document, a source
+   map. In *this* repository none of those inputs is untrusted: the configs are committed and no source
+   map is parsed at runtime. That is why this entry is Medium and not High.
+2. **`tailwindcss` and `@tailwindcss/vite` are declared in `dependencies`.** Tailwind v4 is a
+   build-time CSS compiler; it ships no JavaScript and nothing in `src/` imports it. The placement is
+   harmless for a `private: true` package that is never published, but it makes the production-tree
+   audit misleading — `--omit=dev` still reports `source-map-js`, so the one command that should answer
+   "what reaches users?" does not.
+
+GitHub additionally reported **5 open Dependabot alerts** (3 high, 2 moderate) on the default branch
+when this documentation branch was pushed. They could not be enumerated with the credentials available
+here (`GET /repos/{owner}/{repo}/dependabot/alerts` → `403`), so the two figures are **unreconciled** —
+both are recorded rather than one being quietly dropped. See
+[SECURITY §5.1](../SECURITY.md#51-advisory-state-at-010-measured).
+
+**Remediation:** `npm audit fix`; move `tailwindcss` and `@tailwindcss/vite` to `devDependencies`;
+keep the advisory `npm audit --omit=dev` step in [CI](../.github/workflows/ci.yml) so the number is
+visible on every pull request instead of being discovered at release time. Scheduled as
+[Roadmap D22](roadmap.md#2-phase-0--publishable).
+
+**Verification:** `npm audit` and `npm audit --omit=dev` both report **0 vulnerabilities**;
+`npm run build` still passes with a byte-similar bundle (these packages were never in it); the
+`dependencies` block lists only `react`, `react-dom`, and `lucide-react`.
 
 ---
 

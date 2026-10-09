@@ -47,6 +47,7 @@ push to `main`:
 | | `npm run build` | **yes** |
 | | `npm run lint` | **no** — `continue-on-error: true`, with the baseline stated in the job name |
 | | Preview-instrumentation check (guards [TD-15](../tech-debt.md#td-15), [TD-16](../tech-debt.md#td-16)) | **no** — advisory warning |
+| | Dependency audit, production tree (`npm audit --omit=dev`) | **no** — advisory warning, count written to the job summary. The tree carries 4 transitive advisories today ([TD-22](../tech-debt.md#td-22)) |
 | **report** | Upload the ESLint JSON output as a build artifact | no |
 | | Count errors and compare against the recorded baseline of 45 | **yes, on regression only** — fails if the count exceeds the baseline |
 | **deploy** (separate workflow) | Same instrumentation check, plus a `--base` build | **yes** — refuses to ship preview tooling |

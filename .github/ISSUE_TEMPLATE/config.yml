@@ -16,7 +16,7 @@ contact_links:
   - name: Known issues register
     url: https://github.com/zazieproductions/AETHER-V9-Pro/blob/main/docs/tech-debt.md
     about: >-
-      Twenty-one documented defects (TD-01 to TD-21), each with evidence and a
+      Twenty-two documented defects (TD-01 to TD-22), each with evidence and a
       remediation path. Your issue may already be here.
 
   - name: Roadmap

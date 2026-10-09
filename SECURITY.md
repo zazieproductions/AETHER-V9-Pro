@@ -146,13 +146,48 @@ third-party resources, so SRI is not applicable anywhere.
 | Lockfile | `package-lock.json` committed; `npm ci` is the documented install path |
 | Automated updates | [`.github/dependabot.yml`](.github/dependabot.yml) — weekly, npm and GitHub Actions, grouped minor/patch |
 | CI | Type-check and build gate every PR ([`.github/workflows/ci.yml`](.github/workflows/ci.yml)) |
-| Audit | `npm audit` is not currently run in CI. It should be added as an advisory job once the Phase 0 items land, so a fresh repository does not open with an audit wall |
+| Audit | Advisory step in [`ci.yml`](.github/workflows/ci.yml) — `npm audit --omit=dev` reported into the job summary. Current state measured in [§5.1](#51-advisory-state-at-010-measured) |
 | Runtime dependencies | 4 actually imported (`react`, `react-dom`, `lucide-react`, `tailwindcss`); 2 declared but unused and scheduled for removal ([TD-06](docs/tech-debt.md#td-06)) |
 | Native / install-script packages | `esbuild`, `fsevents` — both Vite toolchain, both dev-only |
 
 Dependency additions require a reason in the PR description. The project's default posture is
 zero-dependency: the entire audio engine is ~460 lines of raw Web Audio, and the icon set is the only
 UI library.
+
+### 5.1 Advisory state at `0.1.0` (measured)
+
+`npm audit` against the committed lockfile reports **4 high-severity advisories, 0 critical, 0
+moderate, 0 low** — every one of them in a *transitive* dependency, and every one with a published
+fix:
+
+| Package | Advisory class | Reaches the tree via | In `dist/assets/*.js`? |
+| --- | --- | --- | --- |
+| `brace-expansion` 1.1.16 | DoS — unbounded expansion length → OOM crash | `eslint → minimatch`; `typescript-eslint → typescript-estree` | **No** (0 hits) |
+| `browserslist` 4.28.6 | DoS — unbounded cache growth → OOM | `@vitejs/plugin-react → @babel/core` | **No** (0 hits) |
+| `js-yaml` 4.3.0 | Quadratic CPU in `!!omap` resolution | `eslint → @eslint/eslintrc` | **No** (0 hits) |
+| `source-map-js` 1.2.1 | Event-loop DoS via indexed section offsets | `@tailwindcss/vite → @tailwindcss/node`; `vite → postcss` | **No** (0 hits) |
+
+All four are **build-machine exposures, not visitor exposures**. None is imported by `src/`, none
+appears in the shipped bundle, and the application makes no network request at runtime ([§3](#3-verified-security-properties)).
+The realistic harm is a pathological input crashing a CI runner or a developer's build — not anything
+reaching a browser.
+
+Two things are stated plainly rather than rounded off:
+
+1. **`npm audit --omit=dev` still reports 1 high** (`source-map-js`), because `tailwindcss` and
+   `@tailwindcss/vite` are declared in `dependencies` rather than `devDependencies`. For a private,
+   never-published package the placement is cosmetic — but it makes the production-tree audit signal
+   misleading, since Tailwind is a build-time CSS compiler that ships no JavaScript. Moving both is a
+   two-line change and would make `--omit=dev` mean what it says.
+2. **GitHub reported 5 open Dependabot alerts** on the default branch (3 high, 2 moderate) when this
+   branch was pushed. The credentials available to this documentation pass cannot enumerate them —
+   `GET /repos/{owner}/{repo}/dependabot/alerts` returns `403` — so the two counts are *not*
+   reconciled here, and this section should not be read as a complete alert list. The Dependabot
+   configuration added in `0.1.0` will open PRs for them.
+
+**Remediation:** `npm audit fix` resolves all four; re-verify with `npm run build` and the commands in
+[§6](#6-reproducing-the-3-claims). Tracked as [TD-22](docs/tech-debt.md#td-22) and scheduled as
+[Roadmap D22](docs/roadmap.md#2-phase-0--publishable).
 
 ## 6. Reproducing the §3 claims
 

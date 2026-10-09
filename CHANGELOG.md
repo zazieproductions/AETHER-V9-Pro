@@ -53,7 +53,7 @@ single README that mixed overview, architecture, and conventions:
 - [`docs/deployment.md`](docs/deployment.md) — hosting recipes for five platforms, caching strategy,
   and the two artifacts that must be stripped before publishing.
 - [`docs/roadmap.md`](docs/roadmap.md) — five phases sequenced by what each unblocks.
-- [`docs/tech-debt.md`](docs/tech-debt.md) — a 21-entry register, each with evidence, severity,
+- [`docs/tech-debt.md`](docs/tech-debt.md) — a 22-entry register, each with evidence, severity,
   remediation, and a verification step, plus the complete 45-item lint baseline as an appendix.
 - [`docs/decisions/`](docs/decisions/) — six Architecture Decision Records covering single-source
   state ownership, the React/canvas split, the audio singleton, zero runtime assets, the procedural
@@ -62,9 +62,10 @@ single README that mixed overview, architecture, and conventions:
 
 **Repository infrastructure:**
 
-- [`.github/workflows/ci.yml`](.github/workflows/ci.yml) — typecheck, build, and advisory lint on
-  Node 20 and 22 for every pull request and push to `main`, with the ESLint report uploaded as an
-  artifact and the error count compared against the recorded baseline.
+- [`.github/workflows/ci.yml`](.github/workflows/ci.yml) — typecheck, build, advisory lint, and an
+  advisory `npm audit --omit=dev`, on Node 20 and 22 for every pull request and push to `main`, with
+  the ESLint report uploaded as an artifact and the error count compared against the recorded
+  baseline.
 - [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml) — a manual-dispatch GitHub Pages
   deployment.
 - [`.github/ISSUE_TEMPLATE/`](.github/ISSUE_TEMPLATE) — structured bug-report and feature-request
@@ -128,6 +129,7 @@ Recorded here so the release notes are not misleading. Full detail in the
 | Medium | No automated tests ([TD-19](docs/tech-debt.md#td-19), [Testing](docs/testing.md)) |
 | Medium | Does not conform to WCAG 2.2 AA — 16 findings ([TD-20](docs/tech-debt.md#td-20), [Accessibility](docs/accessibility.md)) |
 | Medium | Documentation prose compiles into the production CSS — 2.4 kB of rules that match nothing ([TD-21](docs/tech-debt.md#td-21), [Performance §2.4](docs/performance.md#24-the-stylesheet-grows-when-the-documentation-does)) |
+| Medium | `npm audit` reports 4 high-severity advisories in transitive build dependencies — build-machine exposure only, none present in the shipped bundle. GitHub separately reports 5 open Dependabot alerts ([TD-22](docs/tech-debt.md#td-22), [SECURITY §5.1](SECURITY.md#51-advisory-state-at-010-measured)) |
 
 ## [0.0.0] — initial snapshot
 

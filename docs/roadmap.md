@@ -39,6 +39,7 @@ Blocking anything being shown to a real audience. All of this is small; none of 
 | **D12** | `ctx.resume()` in `init()`; add `dispose()`; make the Geiger chain cancellable | [TD-12](tech-debt.md#td-12) | S | **Audio on iOS Safari** — the most likely "it's broken" report |
 | **D06** | Remove `framer-motion` and `react-router-dom`; delete the empty `src/App.css` | [TD-06](tech-debt.md#td-06) | S | A dependency list that means what it says |
 | **D21** | Scope Tailwind's source detection to `index.html` and `src/` so documentation prose stops compiling into the shipped CSS | [TD-21](tech-debt.md#td-21) | S | A deterministic stylesheet; 2.4 kB of dead CSS removed |
+| **D22** | `npm audit fix` the four transitive advisories; move `tailwindcss` and `@tailwindcss/vite` to `devDependencies` so `--omit=dev` means the production tree | [TD-22](tech-debt.md#td-22), [SECURITY §5.1](../SECURITY.md#51-advisory-state-at-010-measured) | S | A clean `npm audit`, and an audit signal that answers "what reaches users?" |
 
 Phase 0 is roughly a day of work and takes the repository from "impressive demo with an asterisk" to
 "safe to link from a résumé".
@@ -141,8 +142,8 @@ Stating these prevents recurring conversations:
 
 ## 9. Contributing to the roadmap
 
-Pick any item marked **S** that does not depend on another — D15, D16, D18, D12, D06, D21, D02,
-D17, D04, D14, L35, D05, D07, A4, A6 are all self-contained and each closes a register entry with a stated
+Pick any item marked **S** that does not depend on another — D15, D16, D18, D12, D06, D21, D22,
+D02, D17, D04, D14, L35, D05, D07, A4, A6 are all self-contained and each closes a register entry with a stated
 verification step. That is the fastest useful first PR to this repository.
 
 Larger items (F1, D01, E3) should start as an issue describing the approach before code, per

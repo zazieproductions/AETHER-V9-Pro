@@ -72,7 +72,7 @@ interop, documented to the standard the code deserves.
 | **Runtime dependencies in the bundle** | `react`, `react-dom`, `lucide-react`, `tailwindcss` |
 | **Network requests at runtime** | **none** — verified: no `fetch`, XHR, WebSocket, or storage API in `src/` |
 | **Permissions requested** | **none** — the "EVP recorder" records nothing |
-| **Documentation** | 12 guides + an index, 6 ADRs, and a 21-entry tech-debt register |
+| **Documentation** | 12 guides + an index, 6 ADRs, and a 22-entry tech-debt register |
 | **Automated tests** | none yet — [strategy and 32 written specifications](docs/testing.md) |
 
 ## Features

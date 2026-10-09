@@ -10,7 +10,7 @@ body:
         Thanks for reporting. Before you file:
 
         - Check the **known issues register** — [docs/tech-debt.md](../../docs/tech-debt.md) documents
-          21 defects (TD-01 … TD-21) with evidence. If your report matches one, say so and we will
+          22 defects (TD-01 … TD-22) with evidence. If your report matches one, say so and we will
           link it instead of duplicating.
         - Check the **roadmap** — [docs/roadmap.md](../../docs/roadmap.md). Work already scheduled there
           does not need a new issue.
