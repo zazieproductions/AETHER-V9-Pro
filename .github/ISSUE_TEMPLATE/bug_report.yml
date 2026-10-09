@@ -1,0 +1,130 @@
+name: Bug report
+description: Something in AETHER V9 Pro behaves incorrectly. Use this for defects, not for questions.
+title: "[bug] "
+labels: ["bug", "needs-triage"]
+type: Bug
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting. Before you file:
+
+        - Check the **known issues register** — [docs/tech-debt.md](../../docs/tech-debt.md) documents
+          22 defects (TD-01 … TD-22) with evidence. If your report matches one, say so and we will
+          link it instead of duplicating.
+        - Check the **roadmap** — [docs/roadmap.md](../../docs/roadmap.md). Work already scheduled there
+          does not need a new issue.
+        - Security vulnerabilities go through the **private advisory flow**, not here — see
+          [SECURITY.md](../../SECURITY.md).
+
+        Line numbers in the docs are a snapshot at commit `102e524`; if one has drifted, mention the
+        file and symbol instead.
+
+  - type: textarea
+    id: summary
+    attributes:
+      label: Summary
+      description: One or two sentences. What breaks?
+      placeholder: Radar contacts are purged before the log records them.
+    validations:
+      required: true
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      description: Which subsystem? See docs/README.md for the map.
+      multiple: true
+      options:
+        - Simulation engine (contacts, EMF, GPS, triangulation)
+        - Audio synthesis (Web Audio graph, mixer, stingers)
+        - Component / rendering (canvas, effects, memoization)
+        - Layout & styling (Tailwind, contrast, responsive)
+        - Build & tooling (Vite, TypeScript, ESLint, CI)
+        - Accessibility
+        - Documentation
+        - Other / not sure
+    validations:
+      required: true
+
+  - type: input
+    id: register
+    attributes:
+      label: Known-issue reference
+      description: The TD-## identifier from docs/tech-debt.md, if this report matches one.
+      placeholder: TD-08
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: The shortest sequence that gets us there. Include which tab or control is involved.
+      placeholder: |
+        1. Load the app and wait for boot.
+        2. Open the Radar tab.
+        3. Set sensitivity above 70.
+        4. Wait ~30 s.
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behaviour
+      description: What should happen, and how do you know? Cite the docs or the code if you can.
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behaviour
+      description: What happens instead. Console errors, screenshots, or recordings are welcome.
+    validations:
+      required: true
+
+  - type: dropdown
+    id: frequency
+    attributes:
+      label: How often?
+      options:
+        - Every time
+        - Most of the time
+        - Intermittent / timing-dependent
+        - Once, and I cannot reproduce it
+    validations:
+      required: true
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: Browser and version, OS, device class (desktop/mobile), screen size. For build issues also include Node and npm versions (`node -v`, `npm -v`).
+      placeholder: |
+        Chrome 141, macOS 15.1, desktop, 1440x900
+        Node v22.22.3, npm 10.9.4
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: sensory
+    attributes:
+      label: Sensory content in this report
+      description: This project produces flashing overlays, sudden audio, and screen shake. Tick anything a reader should be warned about before opening an attachment.
+      options:
+        - label: Attached media contains flashing or strobing visuals
+        - label: Attached media contains sudden or loud audio
+        - label: Attached media contains screen shake or fast motion
+        - label: No sensory-heavy attachments
+
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Pre-flight
+      options:
+        - label: I searched existing issues and this is not a duplicate.
+          required: true
+        - label: I reproduced this against the latest `main`.
+          required: true
+        - label: I checked docs/tech-debt.md and noted the matching TD-## above, or confirmed there is none.
+          required: true
