@@ -2,14 +2,43 @@
   "name": "aether-v9-pro",
   "description": "Cinematic paranormal EMF tracker simulation — a fully client-side fictional hardware instrument built with React, TypeScript, and the Web Audio API.",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.1.0",
   "type": "module",
   "license": "MIT",
+  "author": "zazieproductions (https://github.com/zazieproductions)",
+  "keywords": [
+    "react",
+    "typescript",
+    "vite",
+    "tailwindcss",
+    "web-audio",
+    "web-audio-api",
+    "canvas",
+    "simulation",
+    "procedural-audio",
+    "creative-coding",
+    "single-page-app",
+    "emf-detector",
+    "interactive-fiction"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zazieproductions/AETHER-V9-Pro.git"
+  },
+  "homepage": "https://github.com/zazieproductions/AETHER-V9-Pro#readme",
+  "bugs": {
+    "url": "https://github.com/zazieproductions/AETHER-V9-Pro/issues"
+  },
+  "engines": {
+    "node": ">=20.19"
+  },
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc -b --pretty false",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "lint:fix": "eslint . --fix"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.2.1",
