@@ -1,0 +1,99 @@
+name: Feature or improvement request
+description: Propose new capability, a fix, or a documentation change.
+title: "[request] "
+labels: ["enhancement", "needs-triage"]
+type: Feature
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Scope note: AETHER V9 Pro is a portfolio piece with a deliberately small surface. Requests
+        are judged against [docs/roadmap.md §8 (out of scope)](../../docs/roadmap.md) and the five
+        recorded decisions in [docs/decisions/](../../docs/decisions/README.md). A proposal that
+        contradicts an ADR is welcome — just say which one and why it should change.
+
+  - type: textarea
+    id: summary
+    attributes:
+      label: Summary
+      description: One sentence describing the change.
+      placeholder: Extract the simulation into a pure createEmfEngine(rng) module.
+    validations:
+      required: true
+
+  - type: dropdown
+    id: kind
+    attributes:
+      label: What kind of change is this?
+      options:
+        - New capability
+        - Fix for a documented defect (TD-##)
+        - Refactor with no behaviour change
+        - Performance
+        - Accessibility
+        - Testing or CI
+        - Documentation
+        - Tooling / developer experience
+    validations:
+      required: true
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem or motivation
+      description: What is wrong, missing, or worth improving? Evidence beats opinion — a measurement, a citation, or a repro.
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed change
+      description: What should exist afterwards. Sketch the API, the component boundary, or the docs section. Code is welcome but not required.
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: Other ways to solve this, and why you rejected them. "Do nothing" is a valid option — say why it is not enough.
+
+  - type: textarea
+    id: verification
+    attributes:
+      label: How would we know it worked?
+      description: The acceptance criteria. For code, name the test, the measurement, or the manual step. See docs/testing.md §6 for the manual matrix.
+      placeholder: |
+        A Vitest suite covering contact lifecycle and despawn invariants passes with a seeded RNG;
+        `npm run build` output is unchanged within +/- 1 kB.
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: impact
+    attributes:
+      label: Sensory and safety impact
+      description: Tick everything the change would introduce. Unticked means "none".
+      options:
+        - label: Adds flashing, strobing, or high-contrast motion
+        - label: Adds sudden or loud audio
+        - label: Adds continuous animation above 1 Hz
+        - label: Adds a network request, storage write, or permission prompt (requires a SECURITY.md review)
+
+  - type: input
+    id: refs
+    attributes:
+      label: Related references
+      description: Issue numbers, TD-## identifiers, roadmap IDs, or ADR numbers.
+      placeholder: TD-01, roadmap F1, ADR-0005
+
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Pre-flight
+      options:
+        - label: I searched existing issues and the roadmap; this is not already planned or filed.
+          required: true
+        - label: I have read the relevant architecture decision records and my proposal is consistent with them, or explains why they should change.
+          required: true

@@ -1,0 +1,82 @@
+name: Deploy to GitHub Pages
+
+# Manual dispatch only, on purpose: the base path must be correct for the
+# repository before this can produce a working site.
+#
+# Before the first run:
+#   1. Complete docs/deployment.md §6 (strip preview instrumentation).
+#   2. Add public/favicon.svg — docs/deployment.md §5.
+#   3. Repository → Settings → Pages → Source: "GitHub Actions".
+#   4. Actions → "Deploy to GitHub Pages" → Run workflow.
+#
+# The base path is derived from the repository name below, so no config edit
+# is needed for a project site at https://<owner>.github.io/<repo>/.
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Type-check
+        run: npm run typecheck
+
+      - name: Build with repository base path
+        run: npx vite build --base=/${{ github.event.repository.name }}/
+
+      - name: Verify the artifact is clean
+        run: |
+          # TD-15 / TD-16 — a deployed site must not ship preview tooling.
+          if grep -q 'data-arena\|data-element-picker' dist/index.html; then
+            echo "::error::Refusing to deploy: dist/index.html contains injected preview tooling."
+            echo "::error::See docs/deployment.md#6-strip-preview-instrumentation-before-deploying"
+            exit 1
+          fi
+          if grep -q 'data-source-loc' dist/assets/*.js; then
+            echo "::error::Refusing to deploy: bundle contains data-source-loc attributes."
+            exit 1
+          fi
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy:
+    name: Deploy
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

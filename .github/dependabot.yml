@@ -1,0 +1,93 @@
+version: 2
+
+updates:
+  # Production and development dependencies.
+  # Security patches are grouped separately so they can be merged quickly;
+  # everything else is batched weekly to keep review load low.
+  - package-ecosystem: npm
+    directory: "/"
+    schedule:
+      interval: weekly
+      day: monday
+      time: "06:00"
+      timezone: UTC
+    open-pull-requests-limit: 10
+    commit-message:
+      prefix: "chore(deps)"
+    labels:
+      - dependencies
+      - chore
+    groups:
+      # React and its types must move together — a mismatched pair breaks the build.
+      react:
+        patterns:
+          - "react"
+          - "react-dom"
+          - "@types/react"
+          - "@types/react-dom"
+        update-types:
+          - minor
+          - patch
+      typescript-eslint:
+        patterns:
+          - "typescript-eslint"
+          - "@typescript-eslint/*"
+          - "eslint"
+          - "eslint-plugin-react-hooks"
+          - "eslint-plugin-react-refresh"
+          - "@eslint/*"
+        update-types:
+          - minor
+          - patch
+      vite:
+        patterns:
+          - "vite"
+          - "@vitejs/*"
+          - "esbuild"
+          - "rollup"
+        update-types:
+          - minor
+          - patch
+      tailwind:
+        patterns:
+          - "tailwindcss"
+          - "@tailwindcss/*"
+        update-types:
+          - minor
+          - patch
+      # Once docs/testing.md §5 lands, Vitest and friends group here.
+      testing:
+        patterns:
+          - "vitest"
+          - "@vitest/*"
+          - "jsdom"
+          - "@testing-library/*"
+          - "fast-check"
+        update-types:
+          - minor
+          - patch
+      production-minor:
+        dependency-type: production
+        update-types:
+          - minor
+          - patch
+      development-minor:
+        dependency-type: development
+        update-types:
+          - minor
+          - patch
+
+  # GitHub Actions are pinned to major version tags; keep them current.
+  - package-ecosystem: github-actions
+    directory: "/"
+    schedule:
+      interval: weekly
+      day: monday
+      time: "06:00"
+      timezone: UTC
+    open-pull-requests-limit: 5
+    commit-message:
+      prefix: "ci(deps)"
+    labels:
+      - dependencies
+      - ci
