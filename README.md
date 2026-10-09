@@ -72,7 +72,7 @@ interop, documented to the standard the code deserves.
 | **Runtime dependencies in the bundle** | `react`, `react-dom`, `lucide-react`, `tailwindcss` |
 | **Network requests at runtime** | **none** — verified: no `fetch`, XHR, WebSocket, or storage API in `src/` |
 | **Permissions requested** | **none** — the "EVP recorder" records nothing |
-| **Documentation** | 13 documents, 6 ADRs, and a 21-entry tech-debt register |
+| **Documentation** | 12 guides + an index, 6 ADRs, and a 21-entry tech-debt register |
 | **Automated tests** | none yet — [strategy and 32 written specifications](docs/testing.md) |
 
 ## Features
@@ -150,7 +150,7 @@ instrument is meant to be heard.
 | `npm run typecheck` | The type gate alone, no bundle — the blocking CI step |
 | `npm run preview` | Serve the production build locally |
 | `npm run lint` | ESLint across the repository — currently reports a 45-error baseline ([status](#engineering-status)) |
-| `npm run lint:fix` | Apply the mechanically fixable subset of that baseline |
+| `npm run lint:fix` | `eslint . --fix` — a measured no-op on today's baseline; the 35 mechanical errors are deletions a human makes ([why](docs/development.md#51-why-the-baseline-exists)) |
 
 The build is a static bundle with no server-side requirements. Hosting recipes for Vercel, Netlify,
 GitHub Pages, S3 + CloudFront, and nginx are in **[docs/deployment.md](docs/deployment.md)**.
@@ -220,7 +220,7 @@ AETHER-V9-Pro/
 ├── SECURITY.md                    # verified zero-egress properties, disclosure policy
 ├── CHANGELOG.md                   # Keep a Changelog — 0.1.0 is the documentation release
 ├── CODE_OF_CONDUCT.md             # Contributor Covenant 2.1
-├── docs/                          # 13 documents + 6 ADRs
+├── docs/                          # 12 guides + index, and 6 ADRs
 ├── .github/                       # CI & deploy workflows, issue & PR templates, dependabot
 ├── eslint.config.js               # flat config: TS + react-hooks v7 + refresh
 ├── tsconfig.app.json              # strict, ES2022, bundler resolution

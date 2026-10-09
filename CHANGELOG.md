@@ -86,8 +86,11 @@ single README that mixed overview, architecture, and conventions:
   and an explicit engineering-status section.
 - **`package.json` metadata** — version `0.0.0` → `0.1.0`, plus `repository`, `homepage`, `bugs`,
   `keywords`, `engines`, and `author` fields so the manifest describes the project accurately.
-- **Scripts** — added `typecheck` (`tsc -b --pretty false`) and `lint:fix` (`eslint . --fix`), both
-  used by CI and by the contributing workflow.
+- **Scripts** — added `typecheck` (`tsc -b --pretty false`), which is the blocking CI gate, and
+  `lint:fix` (`eslint . --fix`). Worth recording: `--fix` is a **measured no-op** on this baseline —
+  45 errors before and after, zero files modified — because none of the five rules involved ships a
+  fixer. The 35 "mechanical" errors are deletions a human makes. The script stays for rules that do
+  have fixers.
 - **The production CSS grew by 2.4 kB as a side effect of this release.** Tailwind v4 has no `content`
   array: it scans every non-ignored text file in the project, so documentation prose is a stylesheet
   input. Measured by A/B build against the pristine snapshot — 41.85 kB → **44.21 kB** raw, 7.87 kB →

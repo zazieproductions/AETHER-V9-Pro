@@ -25,7 +25,9 @@ would silently drop the gate the project claims to have. Both outcomes are worse
 third option, and both are common.
 
 The composition of the baseline matters to the decision. Of the 45 errors, **35 are mechanical** —
-unused icon imports, dead state bindings, empty `catch` blocks, one `@ts-ignore`. The other **7 are
+unused icon imports, dead state bindings, empty `catch` blocks, one `@ts-ignore`. Mechanical for a
+*human*: `eslint . --fix` changes nothing here (45 errors before and after, zero files modified),
+because none of those rules ships a fixer. The other **7 are
 design findings** from `eslint-plugin-react-hooks` 7.1.1, a substantially stricter ruleset than the
 5.x series most React code runs, and they overlap almost exactly with real behavioural defects
 already in the register ([TD-02](../tech-debt.md#td-02), [TD-03](../tech-debt.md#td-03)). The plugin

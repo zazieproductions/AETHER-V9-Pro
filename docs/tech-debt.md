@@ -75,7 +75,9 @@ nothing here is hidden from the README.
 | `react-hooks/immutability` | 1 | design — overlaps TD-03 |
 | `@typescript-eslint/ban-ts-comment` | 1 | mechanical |
 
-**35 of 45 are mechanical** and auto-fixable or trivially deletable. The remaining 7 are the same
+**35 of 45 are mechanical** — trivially deletable by a human, and **not** auto-fixable: `eslint . --fix`
+was run against a copy of this tree and changed nothing (**45 errors before, 45 after, zero files modified**), because none of these five rules ships a
+fixer. The remaining 7 are the same
 impure-updater and effect-body-write patterns registered as TD-02 and TD-03, surfaced by
 `eslint-plugin-react-hooks` 7.1.1 — a substantially stricter ruleset than 5.x, correctly configured
 here.
@@ -584,8 +586,8 @@ coupling in place for the next text file someone adds.
 | `src/App.css` | **0 bytes**, imported nowhere | Delete |
 | 5 unused icon imports in `App.tsx`, 12 more across components | [Appendix A](#appendix-a--complete-eslint-baseline) | `Cpu`, `Activity`, `Sparkles`, `HelpCircle`, `ShieldAlert`, … |
 
-**Remediation:** `npm uninstall framer-motion react-router-dom`, delete `src/App.css`, run
-`eslint . --fix`. If routing or animation is genuinely wanted, adopt one deliberately — the
+**Remediation:** `npm uninstall framer-motion react-router-dom`, delete `src/App.css`, and delete the
+17 unused icon imports by hand — `eslint . --fix` will not remove them ([§1](#1-lint-baseline)). If routing or animation is genuinely wanted, adopt one deliberately — the
 [roadmap](roadmap.md) treats deep-linkable tabs as a feature decision, not a dependency cleanup.
 
 **Verification:** `npm ls --depth=0` shows both packages gone; `npm run build` still passes; bundle
@@ -704,7 +706,7 @@ Recorded so they are not "fixed" by someone who has not read the reasoning:
 | ID | Title | Closed by | Date |
 | --- | --- | --- | --- |
 | — | No CI, no issue or PR templates, no changelog, no contributor documentation | This documentation overhaul: [`.github/workflows/ci.yml`](../.github/workflows/ci.yml), [`.github/`](../.github), [`CHANGELOG.md`](../CHANGELOG.md), [`CONTRIBUTING.md`](../CONTRIBUTING.md) | 2026-10-09 |
-| — | Undocumented architecture, no ADRs, no record of known defects | [`docs/`](README.md) — 13 documents, 6 ADRs, this register | 2026-10-09 |
+| — | Undocumented architecture, no ADRs, no record of known defects | [`docs/`](README.md) — 12 guides, 6 ADRs, this register | 2026-10-09 |
 
 IDs are never reused; closed entries stay here for the audit trail.
 

@@ -40,7 +40,7 @@ intended condition — half the design is audio.
 | `npm run preview` | `vite preview` | serves `dist/` for production verification |
 | `npm run typecheck` | `tsc -b --pretty false` | ✓ passes — the type gate in isolation, without bundling. This is the blocking CI gate |
 | `npm run lint` | `eslint .` | ✗ **fails today — 45 errors**, see §5 |
-| `npm run lint:fix` | `eslint . --fix` | applies mechanical fixes only; see §5.3 for what it does and does not reach |
+| `npm run lint:fix` | `eslint . --fix` | **A measured no-op on today's baseline** — **45 errors before, 45 after, zero files modified**. None of the five rules involved ships a fixer (§5.1). Kept for rules that do |
 
 > [!IMPORTANT]
 > `npm run build` runs `tsc -b` **first**, so a type error fails the build before Vite is invoked.
@@ -119,8 +119,11 @@ React codebases still run. It ships rules derived from the React Compiler's requ
 hand-written effect code. Adopting v7 without a remediation pass is what produced this baseline; the
 plugin is correctly configured, and the findings are largely legitimate.
 
-Of the 45, **35 are mechanical** (unused bindings, empty catches, the `@ts-ignore`) and can be
-cleared with `eslint . --fix` plus about ten minutes of judgement. The remaining **7 are design
+Of the 45, **35 are mechanical** (unused bindings, empty catches, the `@ts-ignore`) — mechanical for a
+*human*, not for a tool. `npx eslint . --fix` was run against a copy of this tree and changed nothing:
+**45 errors before, 45 after, zero files modified**. None of `no-unused-vars`, `no-empty`, `no-explicit-any`, or `ban-ts-comment` ships a fixer; they
+emit *suggestions*, which `--fix` does not apply. Budget ten minutes of deletion and judgement, not a
+flag. The remaining **7 are design
 findings** that overlap almost exactly with the behavioural defects in the register — the same
 impure updaters and effect-body state writes that cause [TD-02](tech-debt.md) and [TD-03](tech-debt.md).
 
@@ -327,7 +330,7 @@ AETHER-V9-Pro/
 ├── SECURITY.md                 # reporting path, verified zero-egress properties, known issues
 ├── CHANGELOG.md                # Keep a Changelog format — 0.1.0 is the documentation release
 ├── LICENSE                     # MIT
-├── docs/                       # this documentation set — 13 guides
+├── docs/                       # this documentation set — index + 12 guides
 │   └── decisions/              # architecture decision records, ADR-0001 … ADR-0006
 └── .github/                    # CI and deploy workflows, issue and PR templates, dependabot
 ```
